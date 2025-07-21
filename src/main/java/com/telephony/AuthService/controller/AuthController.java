@@ -3,6 +3,7 @@ package com.telephony.AuthService.controller;
 
 import com.telephony.AuthService.dto.LoginRequestBody;
 import com.telephony.AuthService.dto.LoginResponse;
+import com.telephony.AuthService.dto.OtpRequestBody;
 import com.telephony.AuthService.entity.TelephonyUser;
 import com.telephony.AuthService.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -39,11 +40,13 @@ public class AuthController {
        return new ResponseEntity<>(loginRes,HttpStatus.BAD_REQUEST);
     }
 
-//    @PostMapping("/update_user")
-//    public ResponseEntity<TelephonyUser>updateUser(@RequestBody TelephonyUser updatedUser)
-//    {
-//
-//    }
+    @PostMapping("/otpservice")
+    public ResponseEntity<LoginResponse> OtpLogin(@RequestBody OtpRequestBody userOtp)
+    {
+        AuthService.loginUsingOtpService(userOtp);
+    }
+
+
 
 
 
