@@ -43,7 +43,13 @@ public class AuthController {
     @PostMapping("/otpservice")
     public ResponseEntity<LoginResponse> OtpLogin(@RequestBody OtpRequestBody userOtp)
     {
-        AuthService.loginUsingOtpService(userOtp);
+        LoginResponse loginRes=authService.loginUsingOtpService(userOtp);
+        if(loginRes.isStatus())
+        {
+            return new ResponseEntity<>(loginRes,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(loginRes,HttpStatus.BAD_REQUEST);
+
     }
 
 
