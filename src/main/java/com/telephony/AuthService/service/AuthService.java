@@ -1,11 +1,11 @@
 package com.telephony.AuthService.service;
 
-import com.telephony.AuthService.controller.AuthController;
 import com.telephony.AuthService.dto.LoginRequestBody;
 import com.telephony.AuthService.dto.LoginResponse;
 import com.telephony.AuthService.dto.OtpRequestBody;
 import com.telephony.AuthService.entity.TelephonyUser;
 import com.telephony.AuthService.repo.AuthRepo;
+import com.telephony.AuthService.utility.JwtService;
 import com.telephony.AuthService.utility.PasswordEncoderDecoderService;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,18 @@ public class AuthService {
 
     private final AuthRepo authRepo;
     private final PasswordEncoderDecoderService passwordencoderdecoderservice;
+    private final JwtService jwtservice ;
 
-    public AuthService(AuthRepo authrepo, PasswordEncoderDecoderService ps) {
+    public AuthService(AuthRepo authrepo,
+                       PasswordEncoderDecoderService ps,
+                       JwtService jwtservice) {
         this.authRepo = authrepo;
         this.passwordencoderdecoderservice = ps;
+        this.jwtservice=jwtservice;
     }
 
-    public static void loginUsingOtpService(OtpRequestBody userOtp) {
-
+    public  LoginResponse loginUsingOtpService(OtpRequestBody userOtp) {
+        return null;
     }
 
     public boolean registerService(TelephonyUser user) {
@@ -50,7 +54,7 @@ public class AuthService {
 
             loginresponse.setMessage("Login Sucess");
             loginresponse.setStatus(true);
-            loginresponse.setToken("abc");
+            loginresponse.setToken(jwtservice.generateJwtToken(userLogin.getEmail()));
             return loginresponse;
         }
         return loginresponse;

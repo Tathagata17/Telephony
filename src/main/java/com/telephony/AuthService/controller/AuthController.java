@@ -8,6 +8,8 @@ import com.telephony.AuthService.entity.TelephonyUser;
 import com.telephony.AuthService.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,9 +45,20 @@ public class AuthController {
     @PostMapping("/otpservice")
     public ResponseEntity<LoginResponse> OtpLogin(@RequestBody OtpRequestBody userOtp)
     {
-        AuthService.loginUsingOtpService(userOtp);
+        LoginResponse loginRes=authService.loginUsingOtpService(userOtp);
+        if(loginRes.isStatus())
+        {
+            return new ResponseEntity<>(loginRes,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(loginRes,HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/check")
+    public String check(OAuth2AuthenticationToken auth)
+    {
+        OAuth2User userdata=auth.getPrincipal();
+        return "hello"+userdata.getAttribute("email");
+    }
 
 
 
