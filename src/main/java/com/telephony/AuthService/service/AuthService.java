@@ -17,13 +17,17 @@ public class AuthService {
     private final AuthRepo authRepo;
     private final PasswordEncoderDecoderService passwordencoderdecoderservice;
     private final JwtService jwtservice ;
+    private final EmailService emailService;
 
     public AuthService(AuthRepo authrepo,
                        PasswordEncoderDecoderService ps,
-                       JwtService jwtservice) {
+                       JwtService jwtservice,
+                       EmailService emailService) {
+
         this.authRepo = authrepo;
         this.passwordencoderdecoderservice = ps;
         this.jwtservice=jwtservice;
+        this.emailService=emailService;
     }
 
     public  LoginResponse loginUsingOtpService(OtpRequestBody userOtp) {
@@ -61,5 +65,13 @@ public class AuthService {
     }
 
 
+    public void forgetPasswordService(LoginRequestBody loginBody) {
 
+        String userName=loginBody.getEmail();
+        boolean status=authRepo.existsByEmail(userName);
+        if(status)
+        {
+            emailService.sendEmail(userName);
+        }
+    }
 }

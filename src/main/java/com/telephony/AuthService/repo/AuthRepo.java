@@ -9,4 +9,6 @@ public interface AuthRepo extends JpaRepository<TelephonyUser,String> {
 
     @Query("SELECT u.password FROM TelephonyUser u WHERE u.email = :email")
     String findPasswordByEmail(@Param("email") String email);
+
+    boolean existsByEmail(String email);
 }

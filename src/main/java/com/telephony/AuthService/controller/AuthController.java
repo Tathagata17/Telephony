@@ -60,6 +60,12 @@ public class AuthController {
         return "hello"+userdata.getAttribute("email");
     }
 
+    @PostMapping("/ForgotPassword")
+    public ResponseEntity<TelephonyUser> forgetPassword(@RequestBody LoginRequestBody loginBody)
+    {
+        authService.forgetPasswordService(loginBody);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 
