@@ -5,6 +5,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 
 public class EmailService {
@@ -23,13 +25,15 @@ public class EmailService {
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setSubject("Password Reset");
-            simpleMailMessage.setText("The OTP is " + otpService.generateOTP());
-            simpleMailMessage.setTo("bangarmaruti2002@gmail.com");
+            String generatedOTP=otpService.generateOTP();
+            simpleMailMessage.setText("The OTP is " + generatedOTP);
+            otpService.saveOtp(toEmail,generatedOTP, Duration.ofMinutes(2));
+            simpleMailMessage.setTo("somu111725@gmail.com");
             simpleMailMessage.setFrom("somu111725@gmail.com");
 
             javaMailSender.send(simpleMailMessage);
         } catch (Exception e) {
-            System.out.println("Exception in mail sending");
+            System.out.println("Exception in mail sending"+e.getMessage());
         }
     }
 }

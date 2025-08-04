@@ -22,7 +22,7 @@ public class ConfigFilter {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/auth/login","/api/auth/register","/api/auth/ForgotPassword").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/ForgotPassword", "/api/auth//ResetPassword").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(Oauth ->

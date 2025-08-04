@@ -1,9 +1,7 @@
 package com.telephony.AuthService.controller;
 
 
-import com.telephony.AuthService.dto.LoginRequestBody;
-import com.telephony.AuthService.dto.LoginResponse;
-import com.telephony.AuthService.dto.OtpRequestBody;
+import com.telephony.AuthService.dto.*;
 import com.telephony.AuthService.entity.TelephonyUser;
 import com.telephony.AuthService.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -61,10 +59,20 @@ public class AuthController {
     }
 
     @PostMapping("/ForgotPassword")
-    public ResponseEntity<TelephonyUser> forgetPassword(@RequestBody LoginRequestBody loginBody)
+    public ResponseEntity<TelephonyUser> forgetPassword(@RequestBody ForgetPassword ForgetPasswordBody)
     {
-        authService.forgetPasswordService(loginBody);
+        authService.forgetPasswordService(ForgetPasswordBody);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/ResetPassword")
+    public ResponseEntity<TelephonyUser>resetPassword(@RequestBody ResetPassword resetPassword)
+    {
+        if(authService.resetPassword(resetPassword)==200)
+        {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
