@@ -75,6 +75,11 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/health")
+    public String health()
+    {
+        return "healthy running";
+    }
 
 
 }
