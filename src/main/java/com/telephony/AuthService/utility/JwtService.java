@@ -1,5 +1,6 @@
 package com.telephony.AuthService.utility;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -34,5 +35,31 @@ public class JwtService {
             .signWith(Key, algorithm)
             .compact();
     }
+
+    public boolean validateToken(String token) {
+        try {
+            extractClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String extractUsername(String token)
+    {
+        Claims userClaims=extractClaims(token);
+        return userClaims.getSubject();
+    }
+
+    public Claims extractClaims(String token)
+    {
+        return Jwts
+                .parser()
+                .verifyWith(Key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
 
 }

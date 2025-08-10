@@ -1,8 +1,6 @@
 package com.telephony.AuthService.service;
 
-import com.telephony.AuthService.dto.LoginRequestBody;
-import com.telephony.AuthService.dto.LoginResponse;
-import com.telephony.AuthService.dto.OtpRequestBody;
+import com.telephony.AuthService.dto.*;
 import com.telephony.AuthService.entity.TelephonyUser;
 import com.telephony.AuthService.repo.AuthRepo;
 import com.telephony.AuthService.utility.JwtService;
@@ -17,13 +15,20 @@ public class AuthService {
     private final AuthRepo authRepo;
     private final PasswordEncoderDecoderService passwordencoderdecoderservice;
     private final JwtService jwtservice ;
+    private final EmailService emailService;
+    private final OTPService otpService;
 
     public AuthService(AuthRepo authrepo,
                        PasswordEncoderDecoderService ps,
-                       JwtService jwtservice) {
+                       JwtService jwtservice,
+                       EmailService emailService,
+                       OTPService otpService) {
+
         this.authRepo = authrepo;
         this.passwordencoderdecoderservice = ps;
         this.jwtservice=jwtservice;
+        this.emailService=emailService;
+        this.otpService=otpService;
     }
 
     public  LoginResponse loginUsingOtpService(OtpRequestBody userOtp) {
@@ -61,5 +66,27 @@ public class AuthService {
     }
 
 
+    public void forgetPasswordService(ForgetPassword forgetPasswordBody) {
 
+        String userName=forgetPasswordBody.getEmail();
+        boolean status=authRepo.existsByEmail(userName);
+        if(status)
+        {
+            emailService.sendEmail(userName);
+        }
+    }
+
+    public int resetPassword(ResetPassword resetPassword) {
+        String otp=otpService.getOtp(resetPassword.getEmail());
+        if(otp.equals(resetPassword.getOtp()))
+        {
+           String hashedPassword= passwordencoderdecoderservice
+                   .HashPassword(resetPassword.getPassword());
+           int affectedRow= authRepo.updatePasswordByEmail(resetPassword.getEmail(), hashedPassword);
+           if(affectedRow==1)
+               return 200;
+        }
+
+        return 401;
+    }
 }
